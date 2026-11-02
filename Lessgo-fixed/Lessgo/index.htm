@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LessGo</title>
+  <link rel="stylesheet" href="css/style.css" />
+
+</head>
+<body data-page="menu">
+
+<div class="stars" id="stars"></div>
+<div class="menu"> 
+  <h1>LESSGO</h1>
+  <button class="btn play" onclick="window.location.href='play.html'">Play</button>
+  <button class="btn how" onclick="window.location.href='guides.html'">How To Play</button>
+  <button class="btn settings" onclick="window.location.href='settings.html'">Settings</button>
+  <button class="btn quit" onclick="quitGame()">Quit</button>
+</div>
+
+<script src="js/lang/en.js"></script>
+  <script src="js/lang/nl.js"></script>
+  <script src="js/words-en.js"></script>
+  <script src="js/words-nl.js"></script>
+  <script src="js/language.js"></script>
+<script>
+function startGame(){ alert("Starting LessGo!"); }
+function showHowToPlay(){ alert("Guess the hidden word in limited tries. Letters change color based on correctness."); }
+function openSettings(){ alert("Settings menu coming soon."); }
+function quitGame(){ alert("Thanks for playing LessGo!"); }
+
+// generate animated stars with some bigger and brighter
+const starsContainer = document.getElementById('stars');
+for(let i=0;i<100;i++){
+  const star = document.createElement('div');
+  let size = Math.random() * 2 + 1;
+  let opacity = 0.5 + Math.random() * 0.5;
+  // randomly make some stars bigger and brighter
+  if(Math.random() < 0.2){
+    size *= 2;
+    opacity = 1;
+  }
+  star.className = 'star';
+  star.style.width = `${size}px`;
+  star.style.height = `${size}px`;
+  star.style.top = `${Math.random()*100}%`;
+  star.style.left = `${Math.random()*100}%`;
+  star.style.opacity = opacity;
+  star.style.animationDuration = `${Math.random()*2 + 1.5}s`;
+  starsContainer.appendChild(star);
+} 
+
+</script>
+
+</body>
+</html>

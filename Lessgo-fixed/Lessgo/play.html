@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LessGo - Game</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body data-page="play">
+  <!-- Stars background -->
+  <div class="stars" id="stars"></div>
+
+  <!-- Game container -->
+  <div class="game-container">
+    <h1>LESSGO</h1>
+    <div id="grid" class="grid"></div>
+      <div id="timer">0:00</div>
+    <div id="victoryScreen" class="overlay hidden">
+      <h2 class="victory-title">congratulations!</h2>
+      <p class="victory-message">You guessed the word!</p>
+      <br>
+      <br>
+      
+      <P><span class="victory-time">Your time:</span> <span id="FinalTime"></span></P>
+
+      <button id="playAgainBtn">Play Again</button>
+    </div>
+
+    <div id="loseScreen" class="overlay hidden">
+      <h2 class="defeat-title">Better luck next time!</h2>
+      <p><span class="defeat-message">The word was:</span> <span id="lostWord"></span></p>
+      <br>
+      <br>
+
+      <p><span class="defeat-time">Your time:</span> <span id="FinalTimeLose"></span></p>
+
+
+      <button id="playAgainLoseBtn">Try Again</button>
+    </div>
+  </div>
+
+  <script src="js/lang/en.js"></script>
+  <script src="js/lang/nl.js"></script>
+  <script src="js/words-en.js"></script>
+  <script src="js/words-nl.js"></script>
+  <script src="js/language.js"></script>
+  <!-- Game logic script -->
+  <script src="js/play.js"></script>
+  
+  <!-- Stars generation script -->
+  <script>
+  const starsContainer = document.getElementById('stars');
+  for(let i=0;i<100;i++){
+    const star = document.createElement('div');
+    let size = Math.random() * 2 + 1;
+    let opacity = 0.5 + Math.random() * 0.5;
+    if(Math.random() < 0.2){
+      size *= 2;
+      opacity = 1;
+    }
+    star.className = 'star';
+    star.style.width = `${size}px`;
+    star.style.height = `${size}px`;
+    star.style.top = `${Math.random()*100}%`;
+    star.style.left = `${Math.random()*100}%`;
+    star.style.opacity = opacity;
+    star.style.animationDuration = `${Math.random()*2 + 1.5}s`;
+    starsContainer.appendChild(star);
+  } 
+  </script>
+</body>
+</html>

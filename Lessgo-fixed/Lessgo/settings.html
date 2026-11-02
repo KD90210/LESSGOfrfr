@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="css/style.css" />
+  <title>Settings</title>
+</head>
+<body>
+  <h1>Settings</h1>
+  <label for="Language">Choose Language:</label>
+  <select id="Language" name="Language">
+    <option value="en">English</option>
+    <option value="nl">Dutch</option>
+  </select>
+  
+  <button class="btn save" onclick="saveSettings()">Save</button>
+  
+  <div class="stars" id="stars"></div> 
+  <div class="guides-container"></div>
+
+  <script>
+const starsContainer = document.getElementById('stars');
+for(let i=0;i<100;i++){
+  const star = document.createElement('div');
+  let size = Math.random() * 2 + 1;
+  let opacity = 0.5 + Math.random() * 0.5;
+  // randomly make some stars bigger and brighter
+  if(Math.random() < 0.2){
+    size *= 2;
+    opacity = 1;
+  }
+  star.className = 'star';
+  star.style.width = `${size}px`;
+  star.style.height = `${size}px`;
+  star.style.top = `${Math.random()*100}%`;
+  star.style.left = `${Math.random()*100}%`;
+  star.style.opacity = opacity;
+  star.style.animationDuration = `${Math.random()*2 + 1.5}s`;
+  starsContainer.appendChild(star);
+} 
+
+// show the currently saved language in the dropdown
+const select = document.getElementById('Language');
+const saved = (localStorage.getItem('language') || 'en').toLowerCase();
+select.value = (saved === 'nl' || saved === 'dutch') ? 'nl' : 'en';
+
+function saveSettings(){
+  localStorage.setItem('language', select.value);
+  alert("Settings saved!");
+}
+
+</script>
+
+</body>

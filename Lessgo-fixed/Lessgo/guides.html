@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LessGo - How to play</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body data-page="guides">
+<div class="stars" id="stars"></div> 
+<div class="guides-container">
+  <h1 class="guide-title">How to Play</h1>
+  <hr>
+  <br>
+  <br>
+  <br>
+  <p class="guide-instructions">Guess the hidden word in limited tries. Letters change color based on correctness, if the letter is in the word but in the wrong position, it will be yellow. If the letter is in the word and in the correct position, it will be green.</p>
+  <br>
+  <br>
+  <br>
+  <button class="btn play back-btn" onclick="window.location.href='play.html'">Back to Game</button> 
+
+  <script src="js/lang/en.js"></script>
+  <script src="js/lang/nl.js"></script>
+  <script src="js/words-en.js"></script>
+  <script src="js/words-nl.js"></script>
+  <script src="js/language.js"></script>
+<script>
+const starsContainer = document.getElementById('stars');
+for(let i=0;i<100;i++){
+  const star = document.createElement('div');
+  let size = Math.random() * 2 + 1;
+  let opacity = 0.5 + Math.random() * 0.5;
+  // randomly make some stars bigger and brighter
+  if(Math.random() < 0.2){
+    size *= 2;
+    opacity = 1;
+  }
+  star.className = 'star';
+  star.style.width = `${size}px`;
+  star.style.height = `${size}px`;
+  star.style.top = `${Math.random()*100}%`;
+  star.style.left = `${Math.random()*100}%`;
+  star.style.opacity = opacity;
+  star.style.animationDuration = `${Math.random()*2 + 1.5}s`;
+  starsContainer.appendChild(star);
+} 
+
+</script>
+</body>
+</html>
