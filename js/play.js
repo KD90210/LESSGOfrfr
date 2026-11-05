@@ -47,36 +47,85 @@ function pickWord() {
 
 init();
 
-  // handle key presses
-  document.addEventListener ("keydown", (e) => {
-    if(gameover || e.ctrlKey || e.metaKey || e.altKey) return;
-    
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      submitGuess();
-      return;
-    }
-  // handle backspace
-    if(e.key === 'Backspace'){
+// ONE place that handles input, used by the real keyboard AND the on-screen keyboard
+function handleKey(key){
+  if(gameover) return;
+
+  if(key === 'Enter'){
+    submitGuess();
+    return;
+  }
+
+  if(key === 'Backspace'){
     if(col > 0){
       col--;
       guess = guess.slice(0, -1);
-      const cell = grid.children[currentRow*5 + col];
-      cell.textContent = "";
+      grid.children[currentRow*5 + col].textContent = "";
     }
     return;
   }
-    // handle letter input
-    if(e.key.length === 1 && e.key.match(/[a-zA-Z]/)){
-      if(col < 5){
-        const letter = e.key.toLowerCase();
-        const cell = grid.children[currentRow*5 + col];
-        cell.textContent = e.key.toLowerCase();     
-        guess += letter;
-        col++;
-      }
-    }; 
-  });
+
+  if(key.length === 1 && /[a-zA-Z]/.test(key) && col < 5){
+    const letter = key.toLowerCase();
+    grid.children[currentRow*5 + col].textContent = letter;
+    guess += letter;
+    col++;
+  }
+}
+
+// physical keyboard (desktop)
+document.addEventListener("keydown", (e) => {
+  if(e.ctrlKey || e.metaKey || e.altKey) return;
+  if(e.key === 'Enter') e.preventDefault();
+  handleKey(e.key);
+});
+
+// ---------- on-screen keyboard (phones) ----------
+const keyboardEl = document.getElementById('keyboard');
+const keyRows = ["qwertyuiop", "asdfghjkl", "+zxcvbnm-"]; // + = Enter, - = Backspace
+const keyButtons = {};
+
+keyRows.forEach(rowLetters => {
+  const row = document.createElement('div');
+  row.className = 'key-row';
+  for(const ch of rowLetters){
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'key';
+    if(ch === '+'){ btn.textContent = 'ENTER'; btn.dataset.key = 'Enter'; btn.classList.add('wide'); }
+    else if(ch === '-'){ btn.textContent = '\u232B'; btn.dataset.key = 'Backspace'; btn.classList.add('wide'); }
+    else { btn.textContent = ch; btn.dataset.key = ch; keyButtons[ch] = btn; }
+    row.appendChild(btn);
+  }
+  keyboardEl.appendChild(row);
+});
+
+// mousedown preventDefault stops the buttons from taking focus (so physical Enter can't re-click them)
+keyboardEl.addEventListener('mousedown', e => e.preventDefault());
+keyboardEl.addEventListener('click', e => {
+  const btn = e.target.closest('.key');
+  if(btn) handleKey(btn.dataset.key);
+});
+
+// colour the keys after a guess (green > yellow > red)
+function updateKeyColors(row){
+  const rank = { red: 1, yellow: 2, green: 3 };
+  for(let i=0;i<5;i++){
+    const cell = grid.children[row*5 + i];
+    const btn = keyButtons[cell.textContent];
+    if(!btn) continue;
+    const status = ['green','yellow','red'].find(c => cell.classList.contains(c));
+    const current = ['green','yellow','red'].find(c => btn.classList.contains(c));
+    if(!current || rank[status] > rank[current]){
+      btn.classList.remove('green','yellow','red');
+      btn.classList.add(status);
+    }
+  }
+}
+
+function resetKeyboard(){
+  Object.values(keyButtons).forEach(b => b.classList.remove('green','yellow','red'));
+}
 
 function submitGuess(){
 
@@ -121,6 +170,8 @@ let guessArr = guess.split('');
       cell.classList.add('red');
     }
   }
+
+  updateKeyColors(currentRow);
 
   if (guess === secret) {
   gameover = true;
@@ -180,6 +231,7 @@ document.getElementById("playAgainBtn").addEventListener("click", () => {
 
   // pick new word
   secret = pickWord();
+  resetKeyboard();
 
   console.log("New secret:", secret);
 });
@@ -204,6 +256,7 @@ document.getElementById("playAgainLoseBtn").addEventListener("click", () => {
   }
 
   secret = pickWord();
+  resetKeyboard();
 });
 
 
